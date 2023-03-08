@@ -94,3 +94,80 @@ sudo systemctl restart nginx
 ```sh
 sudo nginx -t
 ```
+
+The above mentioned process is enough to deploy any React application, one can easily deploy their app using a scp command as below:
+
+```sh
+scp -r dist/* rvce@exceptions.rvce.edu.in:/var/www/exceptions.rvce.edu.in/
+```
+
+Although the application will be deployed but it will be following `http` protocol not safe
+
+The following steps involves in transfering `http` to `https`:
+
+## Configuring Firewall rules with UFW:
+
+### Installing ufw:
+
+```sh
+sudo apt install ufw
+```
+
+### Add firewall rules to allow ssh (port 22) connections as well as http (port 80) and https (port 443) traffic.
+
+```sh
+sudo ufw allow ssh
+sudo ufw allow http
+sudo ufw allow https
+```
+
+### Enable UFW if its not already enabled
+
+```sh
+sudo ufw enable
+```
+
+### Verify that UFW is enabled and properly configured for ssh and web traffic.
+
+```sh
+sudo ufw status
+```
+
+### Installing certbot using snap:
+
+```sh
+sudo snap install --classic certbot
+```
+
+### Configure a symbolic link to the Certbot directory using the ln command.
+
+```sh
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+```
+
+### Requesting a TLS/SSL Certificate Using Certbot
+
+```sh
+sudo certbot --nginx
+```
+
+### Enter email address.
+
+### Accept terms of service.
+
+### Optionally subscribe to mailing list.
+
+### Enter domain name(s).
+
+```sh
+exceptions.rvce.edu.in
+```
+
+Now we have successfully installed ssl certificate to our deployed application
+
+Hence our application is easily accessible and will be running with `https` protocol
+
+## References:
+
+- [linode-specifications](https://www.linode.com/products/shared/)
+- [installing-ssl-certificate](https://www.linode.com/docs/guides/enabling-https-using-certbot-with-nginx-on-ubuntu/)
